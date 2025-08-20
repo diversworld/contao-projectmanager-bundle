@@ -16,7 +16,6 @@ use Contao\DC_Table;
 use Contao\Input;
 use Contao\Database;
 use Contao\System;
-use Exception;
 
 /**
  * Table tl_project
@@ -24,7 +23,7 @@ use Exception;
 $GLOBALS['TL_DCA']['tl_project'] = [
     'config' => [
         'dataContainer'    => DC_Table::class,
-        'ctable'           => ['tl_project_task', 'tl_project_milestone'],
+        'ctable'           => ['tl_project_task'],
         'enableVersioning' => true,
         'sql' => [
             'keys' => [
@@ -53,16 +52,10 @@ $GLOBALS['TL_DCA']['tl_project'] = [
         ],
         'operations' => [
             'edit',
-            'tasks' => [
-                'href'  => 'table=tl_project_task',
-                'icon'  => 'children.svg'
-            ],
-            'milestones' => [
-                'href'  => 'table=tl_project_milestone',
-                'icon'  => 'children.svg'
-            ],
+            'children',
             'copy',
             'delete',
+			'cut',
             'show',
             'toggle'
         ]
@@ -98,20 +91,22 @@ $GLOBALS['TL_DCA']['tl_project'] = [
             'search'    => true,
             'eval'      => ['rgxp'=>'alias', 'doNotCopy'=>true, 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50'],
             'save_callback' => [
-                [tl_project_callbacks::class, 'generateAlias']
+                [tl_project::class, 'generateAlias']
             ],
             'sql'       => "varchar(128) NOT NULL default ''",
         ],
         'startDate' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project']['startDate'],
-            'inputType' => 'text',
-            'eval'      => ['rgxp'=>'date', 'datepicker'=>true, 'tl_class'=>'w50'],
-            'sql'       => "int(10) unsigned NOT NULL default 0",
+			'inputType' => 'text',
+			'filter'    => true,
+			'eval'      => ['rgxp'=>'datim','datepicker'=>true, 'tl_class'=>'w50'],
+			'sql'       => "int(10) unsigned NOT NULL default 0",
         ],
         'endDate' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project']['endDate'],
             'inputType' => 'text',
-            'eval'      => ['rgxp'=>'date', 'datepicker'=>true, 'tl_class'=>'w50'],
+			'filter'    => true,
+            'eval'      => ['rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50'],
             'sql'       => "int(10) unsigned NOT NULL default 0",
         ],
         'description' => [
@@ -156,7 +151,7 @@ $GLOBALS['TL_DCA']['tl_project'] = [
     ],
 ];
 
-class tl_project_callbacks extends Backend
+class tl_project extends Backend
 {
     /**
      * Auto-generate the project alias if it has not been set yet

@@ -9,7 +9,6 @@ use Contao\Input;
 use Contao\Database;
 use Contao\System;
 use Contao\StringUtil;
-use Exception;
 
 /**
  * Table tl_project_milestone
@@ -94,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_project_milestone'] = [
             'search'        => true,
             'inputType'     => 'text',
             'eval'          => ['rgxp' => 'alias', 'doNotCopy' => true, 'unique' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
-            'save_callback' => [['tl_project_milestone_callbacks', 'generateAlias']],
+            'save_callback' => [['tl_project_milestone', 'generateAlias']],
             'sql'           => "varchar(255) BINARY NOT NULL default ''"
         ],
         'milestoneDate' => [
@@ -102,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_project_milestone'] = [
             'inputType' => 'text',
             'filter'    => true,
             'eval'      => ['rgxp' => 'date', 'datepicker' => true, 'tl_class' => 'w50 wizard'],
-            'sql'       => "int(10) unsigned NOT NULL default 0",
+            'sql'       => "varchar(10) NOT NULL default ''",
         ],
         'status' => [
             'inputType' => 'select',
@@ -125,7 +124,7 @@ $GLOBALS['TL_DCA']['tl_project_milestone'] = [
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
         'responsible' => [
-            'label'             => &$GLOBALS['TL_LANG']['tl_dc_reservation']['member_id'],
+            'label'             => &$GLOBALS['TL_LANG']['tl_project_milestone']['member_id'],
             'inputType'         => 'select',
             'exclude'           => true,
             'search'            => true,
@@ -136,34 +135,22 @@ $GLOBALS['TL_DCA']['tl_project_milestone'] = [
             'sql'               => "int(10) unsigned NOT NULL default 0",
             'relation'          => ['type' => 'hasOne', 'load' => 'lazy']
         ],
-
-        // ▼ NEU: Aufgaben-Auswahl (M:N über tl_project_milestone_task)
         'tasks' => [
-            'label'           => &$GLOBALS['TL_LANG']['tl_project_milestone']['tasks'],
-            'exclude'         => true,
-            'inputType'       => 'select',
-            'eval'            => [
-                'multiple'          => true,
-                'chosen'            => true,
-                'includeBlankOption'=> false,
-                'tl_class'          => 'clr w100',
-                'doNotSave'         => true, // nichts in tl_project_milestone speichern
+            'label'     => ['Aufgaben', 'Wählen Sie die zugehörigen Aufgaben.'],
+            'inputType' => 'checkboxWizard',
+            'eval'      => ['multiple' => true, 'tl_class' => 'clr'],
+            'relation'  => [
+                'type'            => 'hasMany',
+                'load'            => 'lazy',
+                'table'           => 'tl_project_task',
+                'field'           => 'id',
+                'referenceTable'  => 'tl_project_milestone_task',
+                'referenceColumn' => 'milestone_id',
+                'targetColumn'    => 'task_id',
             ],
-            // nur Tasks des gleichen Projekts anbieten
-            'options_callback' => ['tl_project_milestone_callbacks', 'getTaskOptionsForProject'],
-            // vorbefüllen aus Pivot
-            'load_callback'    => [['tl_project_milestone_callbacks', 'loadTasksFromPivot']],
-            // in Pivot-Tabelle speichern
-            'save_callback'    => [['tl_project_milestone_callbacks', 'saveTasksToPivot']],
-            // Relation (für Model-Layer)
-            'relation'         => ['type' => 'hasMany', 'load' => 'lazy'],
-        ],
-
-        'description' => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_project_milestone']['description'],
-            'inputType' => 'textarea',
-            'eval'      => ['rte' => 'tinyMCE', 'tl_class' => 'clr'],
-            'sql'       => "text NULL",
+            'load_callback' => [['tl_project_milestone', 'loadTasksFromPivot']],
+            'save_callback' => [['tl_project_milestone', 'saveTasksToPivot']],
+            'sql' => "blob NULL",
         ],
         'addNotes' => [
             'exclude'   => true,
@@ -200,7 +187,7 @@ $GLOBALS['TL_DCA']['tl_project_milestone'] = [
     ]
 ];
 
-class tl_project_milestone_callbacks extends Backend
+class tl_project_milestone extends Backend
 {
     /**
      * Alias-Generator
@@ -261,58 +248,48 @@ class tl_project_milestone_callbacks extends Backend
     }
 
     /**
-     * Vorauswahl aus Pivot-Tabelle laden
+     * Aufgaben aus der Pivot-Tabelle laden.
      */
-    public function loadTasksFromPivot($value, DataContainer $dc)
+    public function loadTasksFromPivot($value, DataContainer $dc): array
     {
         if (!$dc->id) {
             return [];
         }
 
-        $ids = [];
         $db = Database::getInstance()
             ->prepare('SELECT task_id FROM tl_project_milestone_task WHERE milestone_id=?')
             ->execute($dc->id);
 
+        $tasks = [];
         while ($db->next()) {
-            $ids[] = (int) $db->task_id;
+            $tasks[] = $db->task_id;
         }
 
-        return $ids;
+        return $tasks;
     }
 
+
     /**
-     * Auswahl in Pivot-Tabelle schreiben (vollständige Synchronisation)
+     * Aufgaben in die Pivot-Tabelle speichern.
      */
-    public function saveTasksToPivot($value, DataContainer $dc)
+    public function saveTasksToPivot($value, DataContainer $dc): string
     {
-        // Eingabewert in Array wandeln
-        $selected = StringUtil::deserialize($value, true);
+        $value = StringUtil::deserialize($value, true);
 
-        // Milestone-ID muss vorhanden sein (bei "neu" erst nach Speichern vorhanden)
-        if (!$dc->id) {
-            return $value;
-        }
+        if ($dc->id) {
+            // Bestehende Einträge löschen
+            Database::getInstance()
+                ->prepare('DELETE FROM tl_project_milestone_task WHERE milestone_id=?')
+                ->execute($dc->id);
 
-        $db = Database::getInstance();
-
-        // Bestehende Zuordnungen löschen
-        $db->prepare('DELETE FROM tl_project_milestone_task WHERE milestone_id=?')
-            ->execute($dc->id);
-
-        // Neue Zuordnungen anlegen
-        $time = time();
-        foreach ($selected as $taskId) {
-            $taskId = (int) $taskId;
-            if ($taskId <= 0) {
-                continue;
+            // Neue Einträge hinzufügen
+            foreach ($value as $taskId) {
+                Database::getInstance()
+                    ->prepare('INSERT INTO tl_project_milestone_task (milestone_id, task_id) VALUES (?, ?)')
+                    ->execute($dc->id, $taskId);
             }
-
-            $db->prepare('INSERT INTO tl_project_milestone_task (tstamp, milestone_id, task_id) VALUES (?, ?, ?)')
-                ->execute($time, $dc->id, $taskId);
         }
 
-        // Wert muss zurückgegeben werden – wird aber dank doNotSave nicht in tl_project_milestone gespeichert
-        return $value;
+        return serialize($value);
     }
 }

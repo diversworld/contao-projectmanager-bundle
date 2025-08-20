@@ -19,7 +19,11 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
     'config' => [
         'dataContainer'    => DC_Table::class,
         'ptable'           => 'tl_project',
+		'ctable'           => ['tl_project_task_dependency'],
         'enableVersioning' => true,
+		'onsubmit_callback' => [
+			['tl_project_task', 'saveDependencies']
+		],
         'sql'              => [
             'keys' => [
                 'id' => 'primary'
@@ -45,29 +49,18 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
             ]
         ],
         'operations' => [
-            'edit'   => [
-                'href'  => 'act=edit',
-                'icon'  => 'edit.svg'
-            ],
-            'copy'   => [
-                'href'  => 'act=copy',
-                'icon'  => 'copy.svg'
-            ],
-            'delete' => [
-                'href'       => 'act=delete',
-                'icon'       => 'delete.svg',
-                'attributes' => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
-            ],
-            'show'   => [
-                'href'       => 'act=show',
-                'icon'       => 'show.svg',
-                'attributes' => 'style="margin-right:3px"'
-            ],
+            'edit',
+			'children',
+            'copy',
+            'delete',
+			'cut',
+            'show',
+			'toggle'
         ]
     ],
     'palettes' => [
         '__selector__' => ['addNotes'],
-        'default'      => '{title_legend},title,alias,priority,progress,status,responsible;{date_legend},startDate,endDate;{dep_legend},depends_on;{details_legend},description,addNotes;{publish_legend},published,start,stop',
+        'default'      => '{title_legend},title,alias,priority,progress,status,assigned_to;{task_legend},predecessor,successor,milestone;{date_legend},startDate,endDate;{dep_legend},depends_on;{details_legend},description,addNotes;{publish_legend},published,start,stop',
     ],
     'fields' => [
         'id' => [
@@ -97,30 +90,46 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
             'inputType'     => 'text',
             'eval'          => ['rgxp'=>'alias', 'doNotCopy'=>true, 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50'],
             'save_callback' => [
-                ['tl_project_task_callbacks', 'generateAlias']
+                ['tl_project_task', 'generateAlias']
             ],
             'sql'           => "varchar(255) BINARY NOT NULL default ''"
         ],
         'startDate' => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['startDate'],
-            'inputType' => 'text',
-            'filter'    => true,
-            'eval'      => ['rgxp'=>'date','datepicker'=>true, 'tl_class'=>'w50'],
-            'sql'       => "int(10) unsigned NOT NULL default 0",
-        ],
-        'endDate' => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['endDate'],
-            'inputType' => 'text',
-            'filter'    => true,
-            'eval'      => ['rgxp'=>'date','datepicker'=>true, 'tl_class'=>'w50'],
-            'sql'       => "int(10) unsigned NOT NULL default 0",
-        ],
+			'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['startDate'],
+			'inputType' => 'text',
+			'filter'    => true,
+			'eval'      => ['rgxp'=>'datim','datepicker'=>true, 'tl_class'=>'w50'],
+			'sql'       => "int(10) unsigned NOT NULL default 0",
+		],
+		'endDate' => [
+			'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['endDate'],
+			'inputType' => 'text',
+			'filter'    => true,
+			'eval'      => ['rgxp'=>'datim','datepicker'=>true, 'tl_class'=>'w50'],
+			'sql'       => "int(10) unsigned NOT NULL default 0",
+		],
         'progress' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['progress'],
             'inputType' => 'text',
             'filter'    => true,
             'eval'      => ['rgxp'=>'digit','maxlength'=>3,'minval'=>0,'maxval'=>100,'tl_class'=>'w50'],
             'sql'       => "smallint(3) unsigned NOT NULL default 0",
+        ],
+		'predecessor' => [
+            'inputType' => 'select',
+            'foreignKey'=> 'tl_project_task.title',
+            'eval'      => ['includeBlankOption'=>true, 'multiple' => true, 'chosen'=>true, 'tl_class'=>'w50'],
+            'sql' => "text default NULL"
+        ],
+		'successor' => [
+            'inputType' => 'select',
+            'foreignKey'=> 'tl_project_task.title',
+            'eval'      => ['includeBlankOption'=>true, 'multiple' => true, 'chosen'=>true, 'tl_class'=>'w50'],
+            'sql' => "text default NULL"
+        ],
+        'milestone' => [
+            'inputType' => 'checkbox',
+            'sql'       => "char(1) NOT NULL default ''",
         ],
         'priority' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['priority'],
@@ -130,14 +139,6 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
             'reference' => &$GLOBALS['TL_LANG']['tl_project_task'],
             'eval'      => ['includeBlankOption'=>false, 'tl_class'=>'w50'],
             'sql'       => "varchar(255) NOT NULL default ''",
-        ],
-        'depends_on' => [
-            'label'       => &$GLOBALS['TL_LANG']['tl_project_task']['depends_on'],
-            'inputType'   => 'select',
-            'foreignKey'  => 'tl_project_task.title',
-            'relation'    => ['type'=>'hasOne', 'load'=>'lazy'],
-            'eval'        => ['includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'],
-            'sql'         => "int(10) unsigned NULL",
         ],
         'description' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['description'],
@@ -156,7 +157,7 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
             'eval'      => ['includeBlankOption' => true, 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
-        'responsible' => [
+        'assigned_to' => [
             'inputType' => 'select',
             'exclude'   => true,
             'search'    => true,
@@ -206,7 +207,7 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
 /**
  * Callbacks
  */
-class tl_project_task_callbacks extends Backend
+class tl_project_task extends Backend
 {
     public function generateAlias(mixed $varValue, DataContainer $dc): mixed
     {
@@ -248,5 +249,29 @@ class tl_project_task_callbacks extends Backend
 
         return '<div class="tl_content_left"><strong>'.StringUtil::specialchars($row['title']).'</strong>'.$dateStr.' — '
             . '<span>Prio: '.$prio.'</span>, <span>Fortschritt: '.$prog.'</span></div>';
+    }
+	
+	public function saveDependencies(DataContainer $dc)
+    {
+        $taskId = $dc->id;
+        $predecessors = StringUtil::deserialize($dc->activeRecord->predecessor, true);
+    	$successors   = StringUtil::deserialize($dc->activeRecord->successor, true);
+
+        $objDb = Database::getInstance();
+
+        // Alte Abhängigkeiten löschen
+        $objDb->prepare("DELETE FROM tl_project_task_dependency WHERE pid=?")
+              ->execute($taskId);
+
+        // Neue Abhängigkeiten speichern
+        foreach ($predecessors as $predId) {
+            $objDb->prepare("INSERT INTO tl_project_task_dependency (pid, predecessor) VALUES (?, ?)")
+                  ->execute($taskId, $predId);
+        }
+
+        foreach ($successors as $succId) {
+            $objDb->prepare("INSERT INTO tl_project_task_dependency (pid, successor) VALUES (?, ?)")
+                  ->execute($taskId, $succId);
+        }
     }
 }

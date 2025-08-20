@@ -1,0 +1,62 @@
+<style>
+    #gantt {
+        width: 100%;
+        min-height: 500px;
+        margin: 1rem 0;
+    }
+    .gantt .bar.milestone {
+        fill: #3498db;
+        stroke: #2980b9;
+    }
+    .gantt .bar.critical {
+        fill: #e74c3c;
+        stroke: #c0392b;
+    }
+    .gantt-popup {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+</style>
+
+<h1>Projekt Gantt Diagramm</h1>
+
+<div id="gantt"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/frappe-gantt/dist/frappe-gantt.min.js"></script>
+<script>
+    // JSON aus PHP übernehmen
+    const tasks = <?= $this->ganttTasks ?>;
+
+    // Debug-Ausgabe in Browser-Konsole
+    console.log("Gantt-Tasks (PHP → JS):", tasks);
+
+    // Debug-Ausgabe auf der Seite
+    document.body.insertAdjacentHTML(
+        "beforeend",
+        "<pre style='background:#eee;padding:1rem;'>" + JSON.stringify(tasks, null, 2) + "</pre>"
+    );
+
+    // Wenn gültige Tasks vorhanden → Gantt rendern
+    if (Array.isArray(tasks) && tasks.length > 0) {
+        new Gantt("#gantt", tasks, {
+            view_mode: 'Day',
+            date_format: 'YYYY-MM-DD',
+            language: 'de',
+            custom_popup_html: task => `
+                <div class="gantt-popup">
+                    <strong>${task.name}</strong><br>
+                    Start: ${task.start}<br>
+                    Ende: ${task.end}<br>
+                    Fortschritt: ${task.progress}%
+                </div>
+            `
+        });
+    } else {
+        document.querySelector('#gantt').innerHTML =
+            "<p><em>Keine Tasks mit gültigen Start- und Enddaten vorhanden.</em></p>";
+    }
+</script>

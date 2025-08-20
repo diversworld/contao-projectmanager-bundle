@@ -10,35 +10,40 @@
  * @link https://github.com/diversworld/contao-projectmanager-bundle
  */
 
-use Diversworld\ContaoProjectmanagerBundle\Model\MilestoneModel;
-use Diversworld\ContaoProjectmanagerBundle\Model\MilestoneTaskModel;
 use Diversworld\ContaoProjectmanagerBundle\Model\ProjectModel;
-use Diversworld\ContaoProjectmanagerBundle\Model\TaskDependencyModel;
 use Diversworld\ContaoProjectmanagerBundle\Model\TaskModel;
+use Diversworld\ContaoProjectmanagerBundle\Model\ProjectTaskDependencyModel;
+use Diversworld\ContaoProjectmanagerBundle\Controller\BackendModule\ProjectGanttModule;
 
 /**
  * Backend modules
  */
 $GLOBALS['BE_MOD']['project_modules'] = [
+
     'project_collection' => [
-        'tables' => [
-            'tl_project',
-            'tl_project_task',
-            'tl_project_milestone',
-            'tl_pm_milestone_task',
-            'tl_pm_task_dependency',
+        'tables' =>  ['tl_project', 'tl_project_task', 'tl_project_task_dependency'],
+    ],
+
+    'project_gantt' => [
+        'callback'   => ProjectGanttModule::class,
+        // Erst die Gantt-Bibliothek, dann unser Init-Skript
+        /*'javascript' => [
+            'https://cdn.jsdelivr.net/npm/frappe-gantt@0.5.0/dist/frappe-gantt.umd.min.js',
+            'bundles/contaoprojectmanager/js/project-gantt-init.js'
         ],
+        'stylesheet' => [
+            'https://cdn.jsdelivr.net/npm/frappe-gantt@0.5.0/dist/frappe-gantt.css',
+            'bundles/contaoprojectmanager/css/project-gantt.css'
+        ],*/
+        'icon'       => 'bundles/contaoprojectmanager/gantt.svg',
     ],
 ];
-
 /**
  * Models
  */
-$GLOBALS['TL_MODELS']['tl_project']             = ProjectModel::class;
-$GLOBALS['TL_MODELS']['tl_project_task']        = TaskModel::class;
-$GLOBALS['TL_MODELS']['tl_project_milestone']   = MilestoneModel::class;
-$GLOBALS['TL_MODELS']['tl_pm_milestone_task']   = MilestoneTaskModel::class;
-$GLOBALS['TL_MODELS']['tl_pm_task_dependency']  = TaskDependencyModel::class;
+$GLOBALS['TL_MODELS']['tl_project'] = ProjectModel::class;
+$GLOBALS['TL_MODELS']['tl_project_task'] = TaskModel::class;
+$GLOBALS['TL_MODELS']['tl_project_task_dependency'] = ProjectTaskDependencyModel::class;
 
 // Frontend-Module registrieren
 //$GLOBALS['FE_MOD']['project']['project_list'] = \Diversworld\ContaoProjectmanagerBundle\Module\ProjectListModule::class;
