@@ -33,10 +33,10 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
     'list' => [
         'sorting' => [
             'mode'        => DataContainer::MODE_PARENT,
-            'fields'      => ['title', 'startDate', 'endDate'],
+            'fields'      => ['startDate'],
             'flag'        => DataContainer::SORT_DAY_ASC,
             'panelLayout' => 'filter;sort,search,limit',
-            'headerFields'=> ['title','startDate','endDate'], // ← Felder aus Elterntabelle
+            'headerFields'=> ['title', 'startDate', 'endDate'], // ← Felder aus Elterntabelle
             'child_record_callback' => [tl_project_task::class, 'listTask'],
         ],
         'label' => [
@@ -62,7 +62,7 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
     ],
     'palettes' => [
         '__selector__' => ['addNotes'],
-        'default'      => '{title_legend},title,alias,priority,progress,status,assigned_to;{task_legend},predecessor,successor,milestone;{date_legend},startDate,endDate;{dep_legend},depends_on;{details_legend},description,addNotes;{publish_legend},published,start,stop',
+        'default'      => '{title_legend},title,alias,priority,progress,status,assigned_to;{task_legend},predecessor,successor,milestone;{date_legend},startDate,endDate;{details_legend},description,addNotes;{publish_legend},published,start,stop',
     ],
     'fields' => [
         'id' => [

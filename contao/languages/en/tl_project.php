@@ -15,39 +15,44 @@ declare(strict_types=1);
 /**
  * Legends
  */
-$GLOBALS['TL_LANG']['tl_project']['first_legend'] = "Basis Einstellungen";
-$GLOBALS['TL_LANG']['tl_project']['second_legend'] = "Erweiterte Einstellungen";
+$GLOBALS['TL_LANG']['tl_project']['title_legend'] = "Basic Settings";
+$GLOBALS['TL_LANG']['tl_project']['details_legend'] = "Detailed Information";
+$GLOBALS['TL_LANG']['tl_project']['publish_legend'] = "Publish";
 
 /**
 * Global operations
 */
-$GLOBALS['TL_LANG']['tl_project']['new'] = ["Neu", "Ein neues Element anlegen"];
+$GLOBALS['TL_LANG']['tl_project']['new'] = ["New", "Create a new element"];
 
 /**
  * Operations
  */
-$GLOBALS['TL_LANG']['tl_project']['edit'] = "Datensatz mit ID: %s bearbeiten";
-$GLOBALS['TL_LANG']['tl_project']['copy'] = "Datensatz mit ID: %s kopieren";
-$GLOBALS['TL_LANG']['tl_project']['delete'] = "Datensatz mit ID: %s löschen";
-$GLOBALS['TL_LANG']['tl_project']['show'] = "Datensatz mit ID: %s ansehen";
+$GLOBALS['TL_LANG']['tl_project']['edit'] = "Edit record with ID: %s";
+$GLOBALS['TL_LANG']['tl_project']['copy'] = "Copy record with ID: %s";
+$GLOBALS['TL_LANG']['tl_project']['delete'] = "Delete record with ID: %s";
+$GLOBALS['TL_LANG']['tl_project']['show'] = "Show record with ID: %s";
 
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_project']['title'] = ["Titel", "Geben Sie den Titel ein"];
-$GLOBALS['TL_LANG']['tl_project']['selectField'] = ["Select Feld", "Wählen Sie aus."];
-$GLOBALS['TL_LANG']['tl_project']['checkboxField'] = ["Chosen Feld", "Wählen Sie aus."];
-$GLOBALS['TL_LANG']['tl_project']['multitextField'] = ["Multitext Feld", "Geben Sie die Werte ein"];
-$GLOBALS['TL_LANG']['tl_project']['addSubpalette'] = ["Erweiterte Einstellungen aktivieren", "Hier können Sie die erweiterten Einstellungen aktivieren."];
-$GLOBALS['TL_LANG']['tl_project']['textareaField'] = ["Textarea", "Geben Sie einen Text ein"];
+$GLOBALS['TL_LANG']['tl_project']['title'] = ["Project name", "Please enter the project title"];
+$GLOBALS['TL_LANG']['tl_project']['alias'] = ["Alias", "Please enter an alias."];
+$GLOBALS['TL_LANG']['tl_project']['startDate'] = ["Project start", "Please enter the project start date."];
+$GLOBALS['TL_LANG']['tl_project']['endDate'] = ["Project end", "Please enter when the project should end."];
+$GLOBALS['TL_LANG']['tl_project']['description'] = ["Project description", "Please enter a description for the project."];
+$GLOBALS['TL_LANG']['tl_project']['addNotes'] = ["Add notes", "Here you can enable the notes field."];
+$GLOBALS['TL_LANG']['tl_project']['notes'] = ["Notes", "Here you can enter notes about the project."];
+$GLOBALS['TL_LANG']['tl_project']['published'] = ["Publish", "Specify whether the project should be published."];
+$GLOBALS['TL_LANG']['tl_project']['start'] = ["Start date", "From when should the project be published."];
+$GLOBALS['TL_LANG']['tl_project']['stop'] = ["End date", "Until when should the project be published."];
 
 /**
  * References
  */
-$GLOBALS['TL_LANG']['tl_project']['firstoption'] = "Erste Option";
-$GLOBALS['TL_LANG']['tl_project']['secondoption'] = "Zweite Option";
+$GLOBALS['TL_LANG']['tl_project']['firstoption'] = "First option";
+$GLOBALS['TL_LANG']['tl_project']['secondoption'] = "Second option";
 
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_project']['customButton'] = "Custom Routine starten";
+$GLOBALS['TL_LANG']['tl_project']['customButton'] = "Start custom routine";

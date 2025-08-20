@@ -38,16 +38,22 @@ class ProjectGanttModule extends BackendModule
 
                 // Dependencies ermitteln
                 $dependencies = [];
+				
                 try {
                     $dependencies = $task->getDependencies();
                 } catch (\Throwable $e) {
                     $dependencies = [];
                 }
+				
                 if (is_string($dependencies)) {
                     $unser = @unserialize($dependencies);
                     $dependencies = ($unser !== false || $dependencies === 'b:0;') ? $unser : [];
                 }
-                if (!is_array($dependencies)) $dependencies = [$dependencies];
+				
+                if (!is_array($dependencies)){
+					$dependencies = [$dependencies];
+				}
+				
                 $dependencies = implode(',', array_filter($dependencies));
 
                 $ganttTasks[] = [
@@ -70,7 +76,56 @@ class ProjectGanttModule extends BackendModule
                 ['id'=>'3','name'=>'Meilenstein','start'=>'2025-08-28','end'=>'2025-08-29','progress'=>100,'custom_class'=>'milestone'],
             ];
         }
+		
+		// ---- Topologische Sortierung ----
+		$sorted = [];
+		$visited = [];
 
+		$visit = function($taskId, &$ganttTasks, &$visited, &$sorted, $stack = []) use (&$visit) {
+			if (isset($visited[$taskId])) {
+				return;
+			}
+			$visited[$taskId] = true;
+
+			// Finde Task
+			foreach ($ganttTasks as $task) {
+				if ($task['id'] === $taskId) {
+					foreach ($task['deps'] as $depId) {
+						$visit((string)$depId, $ganttTasks, $visited, $sorted, array_merge($stack, [$taskId]));
+					}
+					$sorted[$taskId] = $task;
+				}
+			}
+		};
+
+		foreach ($ganttTasks as $task) {
+			$visit($task['id'], $ganttTasks, $visited, $sorted);
+		}
+
+	    $ganttTasks = array_values($sorted);		
+
+		// ---- Zusätzliche Sortierung nach Datum, Meilenstein, Name ----
+		usort($ganttTasks, static function ($a, $b) {
+			$aStart = strtotime($a['start']);
+			$bStart = strtotime($b['start']);
+
+			if ($aStart === $bStart) {
+				$aIsMilestone = ($a['custom_class'] ?? '') === 'milestone';
+				$bIsMilestone = ($b['custom_class'] ?? '') === 'milestone';
+
+				if ($aIsMilestone && !$bIsMilestone) {
+					return -1;
+				}
+				if (!$aIsMilestone && $bIsMilestone) {
+					return 1;
+				}
+
+				return strcmp($a['name'], $b['name']);
+			}
+
+			return $aStart <=> $bStart;
+		});
+		
         $this->Template->ganttTasks = json_encode(
             $ganttTasks,
             JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP

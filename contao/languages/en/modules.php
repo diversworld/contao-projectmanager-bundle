@@ -19,6 +19,7 @@ use Diversworld\ContaoProjectmanagerBundle\Controller\FrontendModule\ProjectList
  */
 $GLOBALS['TL_LANG']['MOD']['project_modules'] = 'Project Manager';
 $GLOBALS['TL_LANG']['MOD']['project_collection'] = ['Projektaufgaben', 'Verwaltung von Projektaufgaben'];
+$GLOBALS['TL_LANG']['MOD']['project_gantt'] = ['Gantt Chart', 'Gantt Chart of the Project'];
 
 /**
  * Frontend modules
