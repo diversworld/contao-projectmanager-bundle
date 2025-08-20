@@ -32,10 +32,12 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
     ],
     'list' => [
         'sorting' => [
-            'mode'        => DataContainer::MODE_SORTABLE,
-            'fields'      => ['title'],
-            'flag'        => DataContainer::SORT_INITIAL_LETTER_ASC,
-            'panelLayout' => 'filter;sort,search,limit'
+            'mode'        => DataContainer::MODE_PARENT,
+            'fields'      => ['title', 'startDate', 'endDate'],
+            'flag'        => DataContainer::SORT_DAY_ASC,
+            'panelLayout' => 'filter;sort,search,limit',
+            'headerFields'=> ['title','startDate','endDate'], // ← Felder aus Elterntabelle
+            'child_record_callback' => [tl_project_task::class, 'listTask'],
         ],
         'label' => [
             'fields' => ['title'],
@@ -97,16 +99,20 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
         'startDate' => [
 			'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['startDate'],
 			'inputType' => 'text',
-			'filter'    => true,
+            'search'    => true,
+            'filter'    => true,
+            'sorting'   => true,
 			'eval'      => ['rgxp'=>'datim','datepicker'=>true, 'tl_class'=>'w50'],
-			'sql'       => "int(10) unsigned NOT NULL default 0",
+			'sql'       => "varchar(10) NOT NULL default ''"
 		],
 		'endDate' => [
 			'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['endDate'],
 			'inputType' => 'text',
-			'filter'    => true,
+            'search'    => true,
+            'filter'    => true,
+            'sorting'   => true,
 			'eval'      => ['rgxp'=>'datim','datepicker'=>true, 'tl_class'=>'w50'],
-			'sql'       => "int(10) unsigned NOT NULL default 0",
+			'sql'       => "varchar(10) NOT NULL default ''"
 		],
         'progress' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['progress'],
@@ -129,12 +135,17 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
         ],
         'milestone' => [
             'inputType' => 'checkbox',
+            'search'    => true,
+            'filter'    => true,
+            'sorting'   => true,
             'sql'       => "char(1) NOT NULL default ''",
         ],
         'priority' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['priority'],
             'inputType' => 'select',
+            'search'    => true,
             'filter'    => true,
+            'sorting'   => true,
             'options'   => ['low','medium','high'],
             'reference' => &$GLOBALS['TL_LANG']['tl_project_task'],
             'eval'      => ['includeBlankOption'=>false, 'tl_class'=>'w50'],

@@ -98,16 +98,18 @@ $GLOBALS['TL_DCA']['tl_project'] = [
         'startDate' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project']['startDate'],
 			'inputType' => 'text',
+			'default'   => time(), // aktuelles Datum vorbelegen
 			'filter'    => true,
 			'eval'      => ['rgxp'=>'datim','datepicker'=>true, 'tl_class'=>'w50'],
-			'sql'       => "int(10) unsigned NOT NULL default 0",
+			'sql'       => "varchar(10) NOT NULL default ''"
         ],
         'endDate' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project']['endDate'],
             'inputType' => 'text',
+			'default'   => time(), // aktuelles Datum vorbelegen
 			'filter'    => true,
             'eval'      => ['rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50'],
-            'sql'       => "int(10) unsigned NOT NULL default 0",
+            'sql'       => "varchar(10) NOT NULL default ''"
         ],
         'description' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project']['description'],

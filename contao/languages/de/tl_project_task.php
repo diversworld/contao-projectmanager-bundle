@@ -15,8 +15,11 @@ declare(strict_types=1);
 /**
  * Legends
  */
-$GLOBALS['TL_LANG']['tl_project_task']['first_legend'] = "Basis Einstellungen";
-$GLOBALS['TL_LANG']['tl_project_task']['second_legend'] = "Erweiterte Einstellungen";
+$GLOBALS['TL_LANG']['tl_project_task']['title_legend'] = "Basisinformationen";
+$GLOBALS['TL_LANG']['tl_project_task']['task_legend'] = "Aufgabeninformationen";
+$GLOBALS['TL_LANG']['tl_project_task']['date_legend'] = "Datumsinformationen";
+$GLOBALS['TL_LANG']['tl_project_task']['details_legend'] = "Detailinformationen";
+$GLOBALS['TL_LANG']['tl_project_task']['publish_legend'] = "Veröffentlichen";
 
 /**
 * Global operations
@@ -34,18 +37,29 @@ $GLOBALS['TL_LANG']['tl_project_task']['show'] = "Datensatz mit ID: %s ansehen";
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_project_task']['title'] = ["Titel", "Geben Sie den Titel ein"];
-$GLOBALS['TL_LANG']['tl_project_task']['selectField'] = ["Select Feld", "Wählen Sie aus."];
-$GLOBALS['TL_LANG']['tl_project_task']['checkboxField'] = ["Chosen Feld", "Wählen Sie aus."];
-$GLOBALS['TL_LANG']['tl_project_task']['multitextField'] = ["Multitext Feld", "Geben Sie die Werte ein"];
-$GLOBALS['TL_LANG']['tl_project_task']['addSubpalette'] = ["Erweiterte Einstellungen aktivieren", "Hier können Sie die erweiterten Einstellungen aktivieren."];
-$GLOBALS['TL_LANG']['tl_project_task']['textareaField'] = ["Textarea", "Geben Sie einen Text ein"];
+$GLOBALS['TL_LANG']['tl_project_task']['title'] = ["Aufgabe", "Geben Sie die Bezeichnung der Aufgabe ein."];
+$GLOBALS['TL_LANG']['tl_project_task']['alias'] = ["Alias", "Geben Sie den Alias der Aufgabe ein."];
+$GLOBALS['TL_LANG']['tl_project_task']['priority'] = ["Priorität", "Geben Sie die Priorität der Aufgabe ein."];
+$GLOBALS['TL_LANG']['tl_project_task']['progress'] = ["Fortschritt", "Geben Sie den Bearbeitungsfortschritt ein."];
+$GLOBALS['TL_LANG']['tl_project_task']['status'] = ["Status", "Wählen Sie den Status der Aufgabe aus."];
+$GLOBALS['TL_LANG']['tl_project_task']['predecessor'] = ["Vorgänger", "Wählen Sie die Aufgaben aus, die vor dieser Aufgabe erledigt werden sollen."];
+$GLOBALS['TL_LANG']['tl_project_task']['successor'] = ["Nachfolger", "Wählen Sie die Aufgaben aus, die nach dieser Aufgabe erledigt werden sollen."];
+$GLOBALS['TL_LANG']['tl_project_task']['milestone'] = ["Meilenstein", "Geben Sie an, ob die Aufgabe ein Meilenstein ist."];
+$GLOBALS['TL_LANG']['tl_project_task']['startDate'] = ["Startdatum", "Geben Sie das Startdatum der Aufgabe an."];
+$GLOBALS['TL_LANG']['tl_project_task']['endDate'] = ["Enddatum", "Geben Sie das Enddatum der Aufgabe an."];
+$GLOBALS['TL_LANG']['tl_project_task']['description'] = ["Aufgabenbeschreibung", "Beschreiben Sie den Inhalt der AUfgabe. Was ist zu tun."];
+$GLOBALS['TL_LANG']['tl_project_task']['addNotes'] = ["Bemerkungen aktivieren", "Hier können Sie das Feld Bemerkungen aktivieren."];
+$GLOBALS['TL_LANG']['tl_project_task']['notes'] = ["Bemerkungen", "Geben Sie Bemerkungen zur Aufgabe ein."];
+$GLOBALS['TL_LANG']['tl_project']['published'] = ["Veröffentlichen", "Geben Sie an, ob die Aufgabe veröffentlicht werden soll."];
+$GLOBALS['TL_LANG']['tl_project']['start'] = ["ab Datum", "Ab wann soll die Aufgabe veröffentlicht werden."];
+$GLOBALS['TL_LANG']['tl_project']['stop'] = ["bis Datum", "Bis wann soll die Aufgabe veröffentlicht werden."];
 
 /**
  * References
  */
-$GLOBALS['TL_LANG']['tl_project_task']['firstoption'] = "Erste Option";
-$GLOBALS['TL_LANG']['tl_project_task']['secondoption'] = "Zweite Option";
+$GLOBALS['TL_LANG']['tl_project_task']['firstoption'] = "ToDo";
+$GLOBALS['TL_LANG']['tl_project_task']['secondoption'] = "in Bearbeitung";
+$GLOBALS['TL_LANG']['tl_project_task']['thirdoption'] = "Erledigt";
 
 /**
  * Buttons

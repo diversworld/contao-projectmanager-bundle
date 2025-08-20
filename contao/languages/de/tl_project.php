@@ -15,8 +15,9 @@ declare(strict_types=1);
 /**
  * Legends
  */
-$GLOBALS['TL_LANG']['tl_project']['first_legend'] = "Basis Einstellungen";
-$GLOBALS['TL_LANG']['tl_project']['second_legend'] = "Erweiterte Einstellungen";
+$GLOBALS['TL_LANG']['tl_project']['title_legend'] = "Basis Einstellungen";
+$GLOBALS['TL_LANG']['tl_project']['details_legend'] = "Detailinformationen";
+$GLOBALS['TL_LANG']['tl_project']['publish_legend'] = "Veröffentlichen";
 
 /**
 * Global operations
@@ -34,12 +35,16 @@ $GLOBALS['TL_LANG']['tl_project']['show'] = "Datensatz mit ID: %s ansehen";
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_project']['title'] = ["Titel", "Geben Sie den Titel ein"];
-$GLOBALS['TL_LANG']['tl_project']['selectField'] = ["Select Feld", "Wählen Sie aus."];
-$GLOBALS['TL_LANG']['tl_project']['checkboxField'] = ["Chosen Feld", "Wählen Sie aus."];
-$GLOBALS['TL_LANG']['tl_project']['multitextField'] = ["Multitext Feld", "Geben Sie die Werte ein"];
-$GLOBALS['TL_LANG']['tl_project']['addSubpalette'] = ["Erweiterte Einstellungen aktivieren", "Hier können Sie die erweiterten Einstellungen aktivieren."];
-$GLOBALS['TL_LANG']['tl_project']['textareaField'] = ["Textarea", "Geben Sie einen Text ein"];
+$GLOBALS['TL_LANG']['tl_project']['title'] = ["Projektname", "Geben Sie den Titel ein"];
+$GLOBALS['TL_LANG']['tl_project']['alias'] = ["Alias", "Bitte geben Sie einen Alias an."];
+$GLOBALS['TL_LANG']['tl_project']['startDate'] = ["Projektstart", "Bitte geben Sie das Startdatum des Projekts an."];
+$GLOBALS['TL_LANG']['tl_project']['endDate'] = ["Projektende", "Bitte geben Sie an bis wann das Projekt beendet sein soll."];
+$GLOBALS['TL_LANG']['tl_project']['description'] = ["Projekteschreibung", "Bitte geben Sie eine Beschreibung für das Projekt an."];
+$GLOBALS['TL_LANG']['tl_project']['addNotes'] = ["Bemekungen hinzufügen", "Hier können Sie das Feld Bemerkungen aktivieren."];
+$GLOBALS['TL_LANG']['tl_project']['notes'] = ["Bemekungen", "Hier können Sie Bemerkungen zum Projekt angeben."];
+$GLOBALS['TL_LANG']['tl_project']['published'] = ["Veröffentlichen", "Geben Sie an, ob das Projekt veröffentlicht werden soll."];
+$GLOBALS['TL_LANG']['tl_project']['start'] = ["ab Datum", "Ab wann soll das Projekt veröffentlicht werden."];
+$GLOBALS['TL_LANG']['tl_project']['stop'] = ["bis Datum", "Bis wann soll das Projekt veröffentlicht werden."];
 
 /**
  * References
