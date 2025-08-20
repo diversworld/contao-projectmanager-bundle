@@ -1,5 +1,8 @@
-![Alt text](docs/logo.png?raw=true "logo")
+
+![Diversworld](docs/dw-logo-k.png "Diversworld Logo")
+
 
 
 # Welcome to Project Manager
-This bundle is still under construction.
+The contao-projectmanager-bundle allows you to manage project tasks, create milestones, and
+display the project as a Gantt chart.
