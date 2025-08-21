@@ -28,7 +28,6 @@ use Doctrine\DBAL\Result;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsFrontendModule(category: 'project_modules', template: 'mod_project_listing')]
@@ -66,7 +65,6 @@ class ProjectListingController extends AbstractFrontendModuleController
         $services['contao.framework'] = ContaoFramework::class;
         $services['database_connection'] = Connection::class;
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
-        $services['security.helper'] = Security::class;
         $services['translator'] = TranslatorInterface::class;
 
         return $services;
