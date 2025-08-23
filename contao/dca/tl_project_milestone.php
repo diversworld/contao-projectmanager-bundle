@@ -5,11 +5,7 @@ declare(strict_types=1);
 use Contao\Backend;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Input;
-use Contao\Database;
-use Contao\System;
-use Contao\StringUtil;
-
+use \Diversworld\ContaoProjectmanagerBundle\EventListener\DataContainer\MilestoneCompletionChecker;
 /**
  * Table tl_project_milestone
  */
@@ -105,13 +101,15 @@ $GLOBALS['TL_DCA']['tl_project_milestone'] = [
         ],
         'status' => [
             'inputType' => 'select',
-            'exclude'   => true,
-            'search'    => true,
-            'filter'    => true,
-            'sorting'   => true,
-            'options'   => ['ToDo', 'in Bearbeitung', 'Erledigt'],
-            'eval'      => ['includeBlankOption' => true, 'tl_class' => 'w50'],
-            'sql'       => "varchar(255) NOT NULL default ''",
+            'label' => &$GLOBALS['TL_LANG']['tl_project_milestone']['status'],
+            'exclude' => true,
+            'search' => true,
+            'filter' => true,
+            'sorting' => true,
+            'options' => &$GLOBALS['TL_LANG']['tl_project_milestone']['itemStatus'],
+            'reference' => &$GLOBALS['TL_LANG']['tl_project_milestone']['itemStatus'],
+            'eval' => ['includeBlankOption' => true, 'submitOnChange' => false, 'chosen' => true, 'mandatory' => false, 'tl_class' => 'w25'],
+            'sql' => "varchar(255) NOT NULL default ''",
         ],
         'priority' => [
             'inputType' => 'select',

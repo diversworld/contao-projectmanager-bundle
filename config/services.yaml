@@ -27,3 +27,8 @@ services:
             - _diversworld_contao_projectmanager_attributes
         calls:
             - [ setName, [ diversworld_contao_projectmanager ] ]
+
+    diversworld.contao_projectmanager_bundle.taskUpdateListener:
+        class: Diversworld\ContaoProjectmanagerBundle\EventListener\TaskUpdateListener
+        tags:
+            - { name: doctrine.event_listener, event: postUpdate }

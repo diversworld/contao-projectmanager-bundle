@@ -2,11 +2,15 @@
 
 namespace Diversworld\ContaoProjectmanagerBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\DataContainer;
 use Diversworld\ContaoProjectmanagerBundle\Model\MilestoneDependencyModel;
 use Diversworld\ContaoProjectmanagerBundle\Model\MilestoneModel;
 use Diversworld\ContaoProjectmanagerBundle\Model\MilestoneTaskModel;
 use Diversworld\ContaoProjectmanagerBundle\Model\TaskModel;
+use LogicException;
 
+#[AsCallback(table: 'tl_project_milestone', target: 'fields.status.save')]
 class MilestoneCompletionChecker
 {
     public function canCompleteMilestone($milestoneId): bool
@@ -69,6 +73,19 @@ class MilestoneCompletionChecker
 
         // Berechne den Durchschnittsfortschritt, wenn Aufgaben vorhanden sind
         return $totalTasks > 0 ? round($completedProgress / $totalTasks, 2) : 0.0;
+    }
+
+    public function checkCompletion(string $value, DataContainer $dc)
+    {
+        if ($value === 'Erledigt') {
+            $canComplete = $this->canCompleteMilestone($dc->id);
+
+            if (!$canComplete) {
+                throw new LogicException('Dieser Meilenstein kann nicht abgeschlossen werden, da abhängige Meilensteine noch nicht fertig sind.');
+            }
+        }
+
+        return $value;
     }
 
 }
