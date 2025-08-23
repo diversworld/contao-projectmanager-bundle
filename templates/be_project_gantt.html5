@@ -29,7 +29,7 @@
 <script src="https://cdn.jsdelivr.net/npm/frappe-gantt/dist/frappe-gantt.min.js"></script>
 <script>
     // JSON aus PHP übernehmen
-    const tasks = <?= $this->ganttTasks ?>;
+    const tasks = <?= $this->ganttTasks; ?>;
 
     // Debug-Ausgabe in Browser-Konsole
     console.log("Gantt-Tasks (PHP → JS):", tasks);
