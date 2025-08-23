@@ -108,6 +108,7 @@ $GLOBALS['TL_DCA']['tl_project_milestone'] = [
             'sorting' => true,
             'options' => &$GLOBALS['TL_LANG']['tl_project_milestone']['itemStatus'],
             'reference' => &$GLOBALS['TL_LANG']['tl_project_milestone']['itemStatus'],
+            'save_callback' => [MilestoneCompletionChecker::class, 'checkCompletion'],
             'eval' => ['includeBlankOption' => true, 'submitOnChange' => false, 'chosen' => true, 'mandatory' => false, 'tl_class' => 'w25'],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
