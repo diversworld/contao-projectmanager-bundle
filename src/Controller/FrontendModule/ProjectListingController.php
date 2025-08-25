@@ -73,10 +73,14 @@ class ProjectListingController extends AbstractFrontendModuleController
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
         $userFirstname = 'DUDE';
-        $user = $this->container->get('security.helper')->getUser();
 
-        // Get the logged in frontend user... if there is one
-        if ($user instanceof FrontendUser) {
+        // Den aktuellen Benutzer abrufen
+        /** @var FrontendUser|null $user */
+        $userAdapter = $this->framework->getAdapter(FrontendUser::class);
+        $user = $userAdapter->getInstance();
+
+        // Prüfen, ob ein Benutzer eingeloggt ist
+        if ($user instanceof FrontendUser && $user->id) {
             $userFirstname = $user->firstname;
         }
 
