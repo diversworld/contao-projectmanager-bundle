@@ -55,4 +55,4 @@ $GLOBALS['TL_LANG']['tl_project']['secondoption'] = "Second option";
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_project']['customButton'] = "Start custom routine";
+$GLOBALS['TL_LANG']['tl_project']['ganttButton'] = ['Gantt-Diagramm', 'Das Gantt-Diagramm für das aktuelle Projekt anzeigen.'];

@@ -22,6 +22,10 @@ $GLOBALS['BE_MOD']['project_modules'] = [
 
     'project_collection' => [
         'tables' =>  ['tl_project', 'tl_project_task', 'tl_project_task_dependency'],
+        'gantt'  => [
+            'callback' => ProjectGanttModule::class,
+        ],
+
     ],
 
     'project_gantt' => [

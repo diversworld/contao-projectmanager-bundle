@@ -37,7 +37,14 @@ class Project
         $systemAdapter->loadLanguageFile('tl_project');
 
         if ('edit' === $inputAdapter->get('act')) {
-            $arrButtons['customButton'] = '<button type="submit" name="customButton" id="customButton" class="tl_submit customButton" accesskey="x">'.$GLOBALS['TL_LANG']['tl_project']['customButton'].'</button>';
+            $projectId = (int) $dc->id;
+
+            // Link-Button: öffnet direkt das Gantt-Diagramm für das aktuelle Projekt
+            $arrButtons['ganttButton'] = sprintf(
+                '<a href="contao?do=project_collection&table=tl_project&key=gantt&id=%d" id="ganttDiagram" class="tl_submit ganttDiagram" accesskey="x">%s</a>',
+                $projectId,
+                $GLOBALS['TL_LANG']['tl_project']['ganttButton'] ?? 'Gantt-Diagramm'
+            );
         }
 
         return $arrButtons;
