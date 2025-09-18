@@ -15,9 +15,18 @@ class ProjectGanttModule extends BackendModule
     {
         $do         = (string) Input::get('do');
         $table      = (string) Input::get('table');
-        $selectedId = (int) (Input::get('id') ?: 0);
 
-        // Projekte für die Auswahl (falls kein Projekt gewählt ist oder der Aufruf über das Menü kommt)
+        // Projekt-ID aus mehreren möglichen Parametern (id bevorzugt)
+        $selectedId = 0;
+        foreach (['id', 'project', 'pid'] as $param) {
+            $val = (int) (Input::get($param) ?: 0);
+            if ($val > 0) {
+                $selectedId = $val;
+                break;
+            }
+        }
+
+        // Projekte für die Auswahl (Menü-Aufruf oder Wechsel)
         $projects = [];
         if (null !== ($all = ProjectModel::findAll())) {
             foreach ($all as $p) {
@@ -28,7 +37,7 @@ class ProjectGanttModule extends BackendModule
             }
         }
 
-        // Wenn keine ID gesetzt ist (Aufruf über Menü), zunächst nur Auswahl anzeigen
+        // Wenn noch kein Projekt gewählt: Nur Auswahl rendern
         if ($selectedId <= 0 && !empty($projects)) {
             $this->Template->projects          = $projects;
             $this->Template->selectedProjectId = 0;
@@ -38,7 +47,7 @@ class ProjectGanttModule extends BackendModule
             return;
         }
 
-        // Tasks nach Projekt filtern
+        // Tasks für das gewählte Projekt
         $tasks = null;
         if ($selectedId > 0) {
             $tasks = TaskModel::findBy('pid', $selectedId);
@@ -46,14 +55,12 @@ class ProjectGanttModule extends BackendModule
 
         $criticalIds = [];
         try {
-            // Falls die Methode einen Projektkontext unterstützt, übergeben – andernfalls leer lassen
             if (method_exists(TaskModel::class, 'calculateCriticalPath')) {
-                // Versuche, eine projektbezogene Berechnung zu nutzen
-                // @phpstan-ignore-next-line
-                $criticalIds = TaskModel::calculateCriticalPath($selectedId);
-                if (!is_array($criticalIds)) {
-                    $criticalIds = [];
-                }
+                // Falls die Methode keinen Parameter erwartet, defensiv abfangen
+                $ref = new \ReflectionMethod(TaskModel::class, 'calculateCriticalPath');
+                $criticalIds = $ref->getNumberOfParameters() > 0
+                    ? (array) TaskModel::calculateCriticalPath($selectedId)
+                    : (array) TaskModel::calculateCriticalPath();
             }
         } catch (\Throwable $e) {
             $criticalIds = [];
@@ -75,7 +82,7 @@ class ProjectGanttModule extends BackendModule
                     $end = $start + 86400; // +1 Tag für Milestone-Rendering
                 }
 
-                // Dependencies
+                // Dependencies extrahieren
                 $dependencies = [];
                 try {
                     if (method_exists($task, 'getDependencies')) {
@@ -108,7 +115,7 @@ class ProjectGanttModule extends BackendModule
             }
         }
 
-        // Sortierung nach Startdatum, dann Meilenstein, dann Name
+        // Sortierung: Datum, Meilenstein, Name
         usort($ganttTasks, static function (array $a, array $b): int {
             $aStart = strtotime($a['start']);
             $bStart = strtotime($b['start']);

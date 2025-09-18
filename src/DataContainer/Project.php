@@ -39,10 +39,23 @@ class Project
         if ('edit' === $inputAdapter->get('act')) {
             $projectId = (int) $dc->id;
 
-            // Link-Button: öffnet direkt das Gantt-Diagramm für das aktuelle Projekt
-            $arrButtons['ganttButton'] = sprintf(
-                '<a href="contao?do=project_collection&table=tl_project&key=gantt&id=%d" id="ganttDiagram" class="tl_submit ganttDiagram" accesskey="x">%s</a>',
+            // CSRF-Token korrekt aus dem Token-Manager beziehen (REQUEST_TOKEN gibt es so nicht mehr zuverlässig)
+            $tokenManager = System::getContainer()->get('contao.csrf.token_manager');
+            $rt = method_exists($tokenManager, 'getDefaultTokenValue')
+                ? (string) $tokenManager->getDefaultTokenValue()
+                : (string) $tokenManager->getToken('contao_csrf_token')->getValue();
+
+            // Korrekte URL (ohne doppeltes &&), inkl. rt
+            $url = sprintf(
+                'contao?do=project_gantt&id=%d&rt=%s',
+                //'contao?do=project_collection&table=tl_project&key=gantt&id=%d&rt=%s',
                 $projectId,
+                rawurlencode($rt)
+            );
+
+            $arrButtons['ganttButton'] = sprintf(
+                '<a href="%s" id="ganttDiagram" class="tl_submit ganttDiagram" accesskey="x">%s</a>',
+                $url,
                 $GLOBALS['TL_LANG']['tl_project']['ganttButton'] ?? 'Gantt-Diagramm'
             );
         }

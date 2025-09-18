@@ -10,7 +10,7 @@ use Diversworld\ContaoProjectmanagerBundle\Model\MilestoneTaskModel;
 use Diversworld\ContaoProjectmanagerBundle\Model\TaskModel;
 use LogicException;
 
-#[AsCallback(table: 'tl_project_milestone', target: 'fields.status.save')]
+#[AsCallback(table: 'tl_project_milestone', target: 'fields.status.save', method: 'checkCompletion')]
 class MilestoneCompletionChecker
 {
     public function canCompleteMilestone($milestoneId): bool
