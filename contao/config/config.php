@@ -30,15 +30,6 @@ $GLOBALS['BE_MOD']['project_modules'] = [
 
     'project_gantt' => [
         'callback'   => ProjectGanttModule::class,
-        // Erst die Gantt-Bibliothek, dann unser Init-Skript
-        /*'javascript' => [
-            'https://cdn.jsdelivr.net/npm/frappe-gantt@0.5.0/dist/frappe-gantt.umd.min.js',
-            'bundles/contaoprojectmanager/js/project-gantt-init.js'
-        ],
-        'stylesheet' => [
-            'https://cdn.jsdelivr.net/npm/frappe-gantt@0.5.0/dist/frappe-gantt.css',
-            'bundles/contaoprojectmanager/css/project-gantt.css'
-        ],*/
         'icon'       => 'bundles/contaoprojectmanager/gantt.svg',
     ],
 ];

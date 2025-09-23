@@ -2,19 +2,36 @@
 
 namespace Diversworld\ContaoProjectmanagerBundle\Controller\BackendModule;
 
-use Contao\BackendModule;
 use Contao\Input;
+use Contao\System;
 use Diversworld\ContaoProjectmanagerBundle\Model\ProjectModel;
 use Diversworld\ContaoProjectmanagerBundle\Model\TaskModel;
+use Contao\CoreBundle\Controller\AbstractBackendController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
-class ProjectGanttModule extends BackendModule
+#[Route(path: '%contao.backend.route_prefix%/project-gantt', name: ProjectGanttModule::class, defaults: ['_scope' => 'backend'])]
+class ProjectGanttModule extends AbstractBackendController
 {
-    protected $strTemplate = 'be_project_gantt';
-
-    protected function compile(): void
+    public function __invoke(): Response
     {
-        $do         = (string) Input::get('do');
-        $table      = (string) Input::get('table');
+        $data = $this->buildTemplateData();
+
+        return $this->render('@Contao/backend/be_project_gantt.html.twig', $data);
+    }
+
+    public function generate(): string
+    {
+        // Legacy/BackendModule-Kompatibilität (String)
+        $data = $this->buildTemplateData();
+
+        return $this->renderView('@Contao/backend/be_project_gantt.html.twig', $data);
+    }
+
+    private function buildTemplateData(): array
+    {
+        $do    = (string) Input::get('do');
+        $table = (string) Input::get('table');
 
         // Projekt-ID aus mehreren möglichen Parametern (id bevorzugt)
         $selectedId = 0;
@@ -25,6 +42,12 @@ class ProjectGanttModule extends BackendModule
                 break;
             }
         }
+
+        // CSRF-Token für das Template bereitstellen (Twig nutzt {{ rt }})
+        $tokenManager = System::getContainer()->get('contao.csrf.token_manager');
+        $rt = method_exists($tokenManager, 'getDefaultTokenValue')
+            ? (string) $tokenManager->getDefaultTokenValue()
+            : (string) $tokenManager->getToken('contao_csrf_token')->getValue();
 
         // Projekte für die Auswahl (Menü-Aufruf oder Wechsel)
         $projects = [];
@@ -39,12 +62,14 @@ class ProjectGanttModule extends BackendModule
 
         // Wenn noch kein Projekt gewählt: Nur Auswahl rendern
         if ($selectedId <= 0 && !empty($projects)) {
-            $this->Template->projects          = $projects;
-            $this->Template->selectedProjectId = 0;
-            $this->Template->do                = $do ?: 'project_gantt';
-            $this->Template->table             = $table ?: '';
-            $this->Template->ganttTasks        = json_encode([], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
-            return;
+            return [
+                'projects'          => $projects,
+                'selectedProjectId' => 0,
+                'do'                => $do ?: 'project_gantt',
+                'table'             => $table ?: '',
+                'rt'                => $rt,
+                'ganttTasks'        => json_encode([], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP),
+            ];
         }
 
         // Tasks für das gewählte Projekt
@@ -56,7 +81,6 @@ class ProjectGanttModule extends BackendModule
         $criticalIds = [];
         try {
             if (method_exists(TaskModel::class, 'calculateCriticalPath')) {
-                // Falls die Methode keinen Parameter erwartet, defensiv abfangen
                 $ref = new \ReflectionMethod(TaskModel::class, 'calculateCriticalPath');
                 $criticalIds = $ref->getNumberOfParameters() > 0
                     ? (array) TaskModel::calculateCriticalPath($selectedId)
@@ -130,13 +154,16 @@ class ProjectGanttModule extends BackendModule
             return $aStart <=> $bStart;
         });
 
-        $this->Template->projects          = $projects;
-        $this->Template->selectedProjectId = $selectedId;
-        $this->Template->do                = $do ?: 'project_gantt';
-        $this->Template->table             = $table ?: '';
-        $this->Template->ganttTasks        = json_encode(
-            $ganttTasks,
-            JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP
-        );
+        return [
+            'projects'          => $projects,
+            'selectedProjectId' => $selectedId,
+            'do'                => $do ?: 'project_gantt',
+            'table'             => $table ?: '',
+            'rt'                => $rt,
+            'ganttTasks'        => json_encode(
+                $ganttTasks,
+                JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP
+            ),
+        ];
     }
 }

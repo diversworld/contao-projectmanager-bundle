@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 /*
- * This file is part of Project Manager.
+ * This file is part of Diveclub App.
  *
- * (c) Diversworld Eckhard Becker 2025 <info@diversworld.eu>
+ * (c) Eckhard Becker 2025 <info@diversworld.eu>
  * @license GPL-3.0-or-later
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
- * @link https://github.com/diversworld/contao-projectmanager-bundle
+ * @link https://github.com/diversworld/contao-diveclub-bundle
  */
 
 namespace Diversworld\ContaoProjectmanagerBundle\Controller;
@@ -55,3 +55,4 @@ class MyCustomController extends AbstractController
         ));
     }
 }
+
