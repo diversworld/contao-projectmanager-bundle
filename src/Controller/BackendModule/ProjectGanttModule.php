@@ -9,6 +9,7 @@ use Diversworld\ContaoProjectmanagerBundle\Model\TaskModel;
 use Contao\CoreBundle\Controller\AbstractBackendController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Twig\Environment;
 
 #[Route(path: '%contao.backend.route_prefix%/project-gantt', name: ProjectGanttModule::class, defaults: ['_scope' => 'backend'])]
 class ProjectGanttModule extends AbstractBackendController
@@ -16,8 +17,9 @@ class ProjectGanttModule extends AbstractBackendController
     public function __invoke(): Response
     {
         $data = $this->buildTemplateData();
+        $twig = System::getContainer()->get('twig');
 
-        return $this->render('@Contao/backend/be_project_gantt.html.twig', $data);
+        return $twig->render('@DiversworldContaoProjectmanager/be_project_gantt.html.twig', $data);
     }
 
     public function generate(): string
@@ -25,7 +27,10 @@ class ProjectGanttModule extends AbstractBackendController
         // Legacy/BackendModule-Kompatibilität (String)
         $data = $this->buildTemplateData();
 
-        return $this->renderView('@Contao/backend/be_project_gantt.html.twig', $data);
+        /** @var Environment $twig */
+        $twig = System::getContainer()->get('twig');
+
+        return $twig->render('@DiversworldContaoProjectmanager/be_project_gantt.html.twig', $data);
     }
 
     private function buildTemplateData(): array
