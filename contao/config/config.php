@@ -21,7 +21,7 @@ use Diversworld\ContaoProjectmanagerBundle\Controller\BackendModule\ProjectGantt
 $GLOBALS['BE_MOD']['project_modules'] = [
 
     'project_collection' => [
-        'tables' =>  ['tl_project', 'tl_project_task', 'tl_project_task_dependency'],
+        'tables' =>  ['tl_project', 'tl_project_task', 'tl_project_task_dependency','tl_content'],
         'gantt'  => [
             'callback' => ProjectGanttModule::class,
         ],

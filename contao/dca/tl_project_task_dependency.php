@@ -1,6 +1,6 @@
 <?php
 
-// contao/dca/tl_dw_task_dependency.php
+// contao/dca/tl_project_task_dependency.php
 $GLOBALS['TL_DCA']['tl_project_task_dependency'] = [
     'config' => [
         'dataContainer'    => 'Table',

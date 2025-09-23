@@ -11,6 +11,8 @@ use Contao\Database;
 use Contao\Date;
 use Contao\Config;
 use Contao\StringUtil;
+use Diversworld\ContaoProjectmanagerBundle\EventListener\DataContainer\PredecessorOptionsCallback;
+use Diversworld\ContaoProjectmanagerBundle\EventListener\DataContainer\SuccessorOptionsCallback;
 
 /**
  * Table tl_project_task
@@ -19,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
     'config' => [
         'dataContainer'    => DC_Table::class,
         'ptable'           => 'tl_project',
-		'ctable'           => ['tl_project_task_dependency'],
+		'ctable'           => ['tl_project_task_dependency','tl_content'],
         'enableVersioning' => true,
 		'onsubmit_callback' => [
 			['tl_project_task', 'saveDependencies']
@@ -124,12 +126,14 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
 		'predecessor' => [
             'inputType' => 'select',
             'foreignKey'=> 'tl_project_task.title',
+			'options_callback' => [PredecessorOptionsCallback::class, '__invoke'],
             'eval'      => ['includeBlankOption'=>true, 'multiple' => true, 'chosen'=>true, 'tl_class'=>'w50'],
             'sql' => "text default NULL"
         ],
 		'successor' => [
             'inputType' => 'select',
             'foreignKey'=> 'tl_project_task.title',
+			'options_callback' => [SuccessorOptionsCallback::class, '__invoke'],
             'eval'      => ['includeBlankOption'=>true, 'multiple' => true, 'chosen'=>true, 'tl_class'=>'w50'],
             'sql' => "text default NULL"
         ],
