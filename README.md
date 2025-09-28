@@ -13,6 +13,7 @@
 A simple Projectmanaging Tool. The contao-projectmanager-bundle allows you to manage project tasks, create milestones, and
 display the project as a Gantt chart.
 
+
 ## Donation
 
 If you like this extension and think it's worth a little donation: You can support me via Paypal.Me:
