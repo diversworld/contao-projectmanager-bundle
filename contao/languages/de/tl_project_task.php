@@ -50,16 +50,24 @@ $GLOBALS['TL_LANG']['tl_project_task']['endDate'] = ["Enddatum", "Geben Sie das 
 $GLOBALS['TL_LANG']['tl_project_task']['description'] = ["Aufgabenbeschreibung", "Beschreiben Sie den Inhalt der AUfgabe. Was ist zu tun."];
 $GLOBALS['TL_LANG']['tl_project_task']['addNotes'] = ["Bemerkungen aktivieren", "Hier können Sie das Feld Bemerkungen aktivieren."];
 $GLOBALS['TL_LANG']['tl_project_task']['notes'] = ["Bemerkungen", "Geben Sie Bemerkungen zur Aufgabe ein."];
-$GLOBALS['TL_LANG']['tl_project']['published'] = ["Veröffentlichen", "Geben Sie an, ob die Aufgabe veröffentlicht werden soll."];
-$GLOBALS['TL_LANG']['tl_project']['start'] = ["ab Datum", "Ab wann soll die Aufgabe veröffentlicht werden."];
-$GLOBALS['TL_LANG']['tl_project']['stop'] = ["bis Datum", "Bis wann soll die Aufgabe veröffentlicht werden."];
+$GLOBALS['TL_LANG']['tl_project_task']['published'] = ["Veröffentlichen", "Geben Sie an, ob die Aufgabe veröffentlicht werden soll."];
+$GLOBALS['TL_LANG']['tl_project_task']['start'] = ["ab Datum", "Ab wann soll die Aufgabe veröffentlicht werden."];
+$GLOBALS['TL_LANG']['tl_project_task']['stop'] = ["bis Datum", "Bis wann soll die Aufgabe veröffentlicht werden."];
 
 /**
  * References
  */
-$GLOBALS['TL_LANG']['tl_project_task']['firstoption'] = "ToDo";
-$GLOBALS['TL_LANG']['tl_project_task']['secondoption'] = "in Bearbeitung";
-$GLOBALS['TL_LANG']['tl_project_task']['thirdoption'] = "Erledigt";
+$GLOBALS['TL_LANG']['tl_project_task']['taskStatus'] = [
+    '1' => 'ToDo',
+    '2' => 'in Bearbeitung',
+    '3' => 'Erledigt'
+];
+$GLOBALS['TL_LANG']['tl_project_task']['taskPriority'] = [
+    '1' => 'Dringend',
+    '2' => 'Hoch',
+    '3' => 'Normal',
+    '4' => 'Niedrig'
+];
 
 /**
  * Buttons

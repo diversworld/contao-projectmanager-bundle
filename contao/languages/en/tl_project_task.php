@@ -60,6 +60,17 @@ $GLOBALS['TL_LANG']['tl_project_task']['stop']        = ["End date", "Until when
 $GLOBALS['TL_LANG']['tl_project_task']['firstoption']  = "To do";
 $GLOBALS['TL_LANG']['tl_project_task']['secondoption'] = "In progress";
 $GLOBALS['TL_LANG']['tl_project_task']['thirdoption']  = "Completed";
+$GLOBALS['TL_LANG']['tl_project_task']['taskStatus'] = [
+    '1' => 'ToDo',
+    '2' => 'In progress',
+    '3' => 'Completed'
+];
+$GLOBALS['TL_LANG']['tl_project_task']['taskPriority'] = [
+    '1' => 'Urgend',
+    '2' => 'High',
+    '3' => 'Normal',
+    '4' => 'Low'
+];
 
 /**
  * Buttons

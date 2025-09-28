@@ -12,6 +12,7 @@ use Contao\Date;
 use Contao\Config;
 use Contao\StringUtil;
 use Diversworld\ContaoProjectmanagerBundle\EventListener\DataContainer\PredecessorOptionsCallback;
+use Diversworld\ContaoProjectmanagerBundle\EventListener\DataContainer\StartDateSaveCallback;
 use Diversworld\ContaoProjectmanagerBundle\EventListener\DataContainer\SuccessorOptionsCallback;
 
 /**
@@ -35,8 +36,8 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
     'list' => [
         'sorting' => [
             'mode'        => DataContainer::MODE_PARENT,
-            'fields'      => ['startDate'],
-            'flag'        => DataContainer::SORT_DAY_ASC,
+            'fields'      => ['status','startDate'],
+            'flag'        => DataContainer::SORT_ASC,
             'panelLayout' => 'filter;sort,search,limit',
             'headerFields'=> ['title', 'startDate', 'endDate'], // ← Felder aus Elterntabelle
             'child_record_callback' => [tl_project_task::class, 'listTask'],
@@ -64,7 +65,10 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
     ],
     'palettes' => [
         '__selector__' => ['addNotes'],
-        'default'      => '{title_legend},title,alias,priority,progress,status,assigned_to;{task_legend},predecessor,successor,milestone;{date_legend},startDate,endDate;{details_legend},description,addNotes;{publish_legend},published,start,stop',
+        'default'      => '{title_legend},title,alias,priority,status,progress,assigned_to;
+                           {task_legend},predecessor,successor,milestone;
+                           {date_legend},startDate,endDate;
+                           {details_legend},description,addNotes;{publish_legend},published,start,stop',
     ],
     'fields' => [
         'id' => [
@@ -104,6 +108,7 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
+            'save_callback' => [StartDateSaveCallback::class, '__invoke'],
 			'eval'      => ['rgxp'=>'datim','datepicker'=>true, 'tl_class'=>'w50'],
 			'sql'       => "varchar(10) NOT NULL default ''"
 		],
@@ -147,11 +152,12 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
         'priority' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['priority'],
             'inputType' => 'select',
+            'default'   => '3',
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
-            'options'   => ['low','medium','high'],
-            'reference' => &$GLOBALS['TL_LANG']['tl_project_task'],
+            'options'   => &$GLOBALS['TL_LANG']['tl_project_task']['taskPriority'],
+            'reference' => &$GLOBALS['TL_LANG']['tl_project_task']['taskPriority'],
             'eval'      => ['includeBlankOption'=>false, 'tl_class'=>'w50'],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
@@ -164,11 +170,12 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
         'status' => [
             'inputType' => 'select',
             'exclude'   => true,
+            'default'   => '1',
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
-            'reference' => &$GLOBALS['TL_LANG']['tl_project_task'],
-            'options'   => ['ToDo', 'in Bearbeitung', 'Erledigt'],
+            'reference' => &$GLOBALS['TL_LANG']['tl_project_task']['taskStatus'],
+            'options'   => &$GLOBALS['TL_LANG']['tl_project_task']['taskStatus'],
             'eval'      => ['includeBlankOption' => true, 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
@@ -224,6 +231,19 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
  */
 class tl_project_task extends Backend
 {
+    private static bool $groupInit = false;
+    private static string $lastGroup = '';
+
+    // Reset bei jedem Ladevorgang der Liste
+    public function __construct()
+    {
+        parent::__construct();
+        if (!self::$groupInit) {
+            self::$lastGroup = "\0"; // unmöglicher Startwert
+            self::$groupInit = true;
+        }
+    }
+
     public function generateAlias(mixed $varValue, DataContainer $dc): mixed
     {
         $aliasExists = static function (string $alias) use ($dc): bool {
@@ -265,7 +285,15 @@ class tl_project_task extends Backend
         return '<div class="tl_content_left"><strong>'.StringUtil::specialchars($row['title']).'</strong>'.$dateStr.' — '
             . '<span>Prio: '.$prio.'</span>, <span>Fortschritt: '.$prog.'</span></div>';
     }
-	
+
+    public function groupByStatus(string $group, string $mode, string $field, array $row, DataContainer $dc): string
+    {
+        // Leeres Label für leere Statuswerte
+        $label = $group !== '' ? $group : '- ohne Status -';
+        //$label = $group !== '' ? ($GLOBALS['TL_LANG']['tl_project_task'][$group] ?? $group) : '- ohne Status -';
+        return sprintf('<strong>%s</strong>', StringUtil::specialchars($label));
+    }
+
 	public function saveDependencies(DataContainer $dc)
     {
         $taskId = $dc->id;
