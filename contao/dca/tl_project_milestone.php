@@ -188,6 +188,19 @@ $GLOBALS['TL_DCA']['tl_project_milestone'] = [
 
 class tl_project_milestone extends Backend
 {
+    public function getMemberOptions(): array
+    {
+        $options = [];
+        $db = \Contao\Database::getInstance();
+        $result = $db->execute("SELECT id, CONCAT(firstname, ' ', lastname) as name FROM tl_member ORDER BY lastname, firstname");
+
+        while ($result->next()) {
+            $options[$result->id] = $result->name;
+        }
+
+        return $options;
+    }
+
     /**
      * Alias-Generator
      */

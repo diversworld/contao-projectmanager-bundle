@@ -53,10 +53,16 @@ class Project
                 rawurlencode($rt)
             );
 
+            $label = $GLOBALS['TL_LANG']['tl_project']['ganttButton'] ?? 'Gantt-Diagramm';
+
+            if (\is_array($label)) {
+                $label = $label[0];
+            }
+
             $arrButtons['ganttButton'] = sprintf(
                 '<a href="%s" id="ganttDiagram" class="tl_submit ganttDiagram" accesskey="x">%s</a>',
                 $url,
-                $GLOBALS['TL_LANG']['tl_project']['ganttButton'] ?? 'Gantt-Diagramm'
+                $label
             );
         }
 

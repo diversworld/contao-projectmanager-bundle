@@ -11,6 +11,7 @@ use Contao\Database;
 use Contao\Date;
 use Contao\Config;
 use Contao\StringUtil;
+use Diversworld\ContaoProjectmanagerBundle\EventListener\DataContainer\MemberOptionsListener;
 use Diversworld\ContaoProjectmanagerBundle\EventListener\DataContainer\PredecessorOptionsCallback;
 use Diversworld\ContaoProjectmanagerBundle\EventListener\DataContainer\StartDateSaveCallback;
 use Diversworld\ContaoProjectmanagerBundle\EventListener\DataContainer\SuccessorOptionsCallback;
@@ -128,19 +129,21 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
             'eval'      => ['rgxp'=>'digit','maxlength'=>3,'minval'=>0,'maxval'=>100,'tl_class'=>'w50'],
             'sql'       => "smallint(3) unsigned NOT NULL default 0",
         ],
-		'predecessor' => [
+        'predecessor' => [
             'inputType' => 'select',
             'foreignKey'=> 'tl_project_task.title',
-			'options_callback' => [PredecessorOptionsCallback::class, '__invoke'],
+            'options_callback' => [PredecessorOptionsCallback::class, '__invoke'],
             'eval'      => ['includeBlankOption'=>true, 'multiple' => true, 'chosen'=>true, 'tl_class'=>'w50'],
-            'sql' => "text default NULL"
+            'sql' => "text default NULL",
+            'relation'  => ['type' => 'hasMany', 'load' => 'lazy']
         ],
 		'successor' => [
             'inputType' => 'select',
             'foreignKey'=> 'tl_project_task.title',
-			'options_callback' => [SuccessorOptionsCallback::class, '__invoke'],
+            'options_callback' => [SuccessorOptionsCallback::class, '__invoke'],
             'eval'      => ['includeBlankOption'=>true, 'multiple' => true, 'chosen'=>true, 'tl_class'=>'w50'],
-            'sql' => "text default NULL"
+            'sql' => "text default NULL",
+            'relation'  => ['type' => 'hasMany', 'load' => 'lazy']
         ],
         'milestone' => [
             'inputType' => 'checkbox',
@@ -185,7 +188,8 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
-            'foreignKey'=> "tl_member.CONCAT(firstname, ' ', lastname)",
+            'options_callback'  => [MemberOptionsListener::class, '__invoke'],
+            'foreignKey'=> 'tl_member.id',
             'eval'      => ['includeBlankOption' => true, 'tl_class' => 'w50'],
             'sql'       => "int(10) unsigned NOT NULL default 0",
             'relation'  => ['type' => 'hasOne', 'load' => 'lazy']
@@ -242,6 +246,19 @@ class tl_project_task extends Backend
             self::$lastGroup = "\0"; // unmöglicher Startwert
             self::$groupInit = true;
         }
+    }
+
+    public function getMemberOptions(): array
+    {
+        $options = [];
+        $db = \Contao\Database::getInstance();
+        $result = $db->execute("SELECT id, CONCAT(firstname, ' ', lastname) as name FROM tl_member ORDER BY lastname, firstname");
+
+        while ($result->next()) {
+            $options[$result->id] = $result->name;
+        }
+
+        return $options;
     }
 
     public function generateAlias(mixed $varValue, DataContainer $dc): mixed
