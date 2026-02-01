@@ -43,29 +43,29 @@ $GLOBALS['TL_DCA']['tl_project_task_dependency'] = [
     ],
     'fields' => [
         'id' => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment",
+            'sql' => "int unsigned NOT NULL auto_increment",
         ],
         'pid' => [
             'foreignKey' => 'tl_project_task.title',
-            'sql'        => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
         'tstamp' => [
-            'sql' => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
         'sorting' => [
-            'sql' => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
         'predecessor' => [
             'inputType' => 'select',
             'foreignKey'=> 'tl_project_task.title',
             'eval'      => ['includeBlankOption'=>true, 'chosen'=>true, 'mandatory'=>true, 'tl_class'=>'w50'],
-            'sql'       => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
         'successor' => [
             'inputType' => 'select',
             'foreignKey'=> 'tl_project_task.title',
             'eval'      => ['includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'],
-            'sql'       => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
     ],
 ];

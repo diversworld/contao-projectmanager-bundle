@@ -73,18 +73,18 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
     ],
     'fields' => [
         'id' => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment",
+            'sql' => "int unsigned NOT NULL auto_increment",
         ],
         'pid' => [
             'foreignKey' => 'tl_project.title',
             'relation'   => ['type' => 'belongsTo', 'load' => 'lazy'],
-            'sql'        => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
         'tstamp' => [
-            'sql' => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
         'sorting' => [
-            'sql' => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
         'title' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['title'],
@@ -101,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
             'save_callback' => [
                 ['tl_project_task', 'generateAlias']
             ],
-            'sql'           => "varchar(255) BINARY NOT NULL default ''"
+            'sql' => "varchar(255) NOT NULL default ''"
         ],
         'startDate' => [
 			'label'     => &$GLOBALS['TL_LANG']['tl_project_task']['startDate'],
@@ -191,7 +191,7 @@ $GLOBALS['TL_DCA']['tl_project_task'] = [
             'options_callback'  => [MemberOptionsListener::class, '__invoke'],
             'foreignKey'=> 'tl_member.id',
             'eval'      => ['includeBlankOption' => true, 'tl_class' => 'w50'],
-            'sql'       => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
             'relation'  => ['type' => 'hasOne', 'load' => 'lazy']
         ],
         'addNotes' => [

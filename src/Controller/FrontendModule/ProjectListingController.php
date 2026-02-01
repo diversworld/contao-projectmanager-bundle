@@ -41,7 +41,7 @@ class ProjectListingController extends AbstractFrontendModuleController
      * This method extends the parent __invoke method,
      * its usage is usually not necessary.
      */
-    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $page = null): Response
+    public function __invoke(Request $request, ModuleModel $model, string $section, ?array $classes = null, ?PageModel $page = null): Response
     {
         // Get the page model
         $this->page = $page;

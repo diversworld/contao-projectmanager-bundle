@@ -40,13 +40,13 @@ $GLOBALS['TL_DCA']['tl_project_milestone_task'] = [
 
     'fields' => [
         'id' => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment",
+            'sql' => "int unsigned NOT NULL auto_increment",
         ],
         'tstamp' => [
-            'sql' => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
         'sorting' => [
-            'sql' => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
         'milestone_id' => [
             'label'     => ['Meilenstein', 'Verweise auf einen Meilenstein.'],
@@ -54,7 +54,7 @@ $GLOBALS['TL_DCA']['tl_project_milestone_task'] = [
             'foreignKey'=> 'tl_project_milestone.title',
             'eval'      => ['mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'relation'  => ['type' => 'hasOne', 'load' => 'eager'],
-            'sql'       => "int(10) unsigned NOT NULL",
+            'sql' => "int unsigned NOT NULL",
         ],
         'task_id' => [
             'label'     => ['Aufgabe', 'Verweise auf eine Aufgabe.'],
@@ -62,7 +62,7 @@ $GLOBALS['TL_DCA']['tl_project_milestone_task'] = [
             'foreignKey'=> 'tl_project_task.title',
             'eval'      => ['mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'relation'  => ['type' => 'hasOne', 'load' => 'eager'],
-            'sql'       => "int(10) unsigned NOT NULL",
+            'sql' => "int unsigned NOT NULL",
         ],
     ],
 ];

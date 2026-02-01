@@ -41,14 +41,14 @@ $GLOBALS['TL_DCA']['tl_project_milestone_dependency'] = [
 
     'fields' => [
         'id' => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment",
+            'sql' => "int unsigned NOT NULL auto_increment",
         ],
         'milestone_id' => [
             'label'     => ['Meilenstein', 'Auswählen'],
             'inputType' => 'select',
             'foreignKey'=> 'tl_project_milestone.title',
             'eval'      => ['mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
-            'sql'       => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
             'relation'  => ['type' => 'hasOne', 'load' => 'eager'],
         ],
         'depends_on_id' => [
@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_project_milestone_dependency'] = [
             'inputType' => 'select',
             'foreignKey'=> 'tl_project_milestone.title',
             'eval'      => ['mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
-            'sql'       => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
             'relation'  => ['type' => 'hasOne', 'load' => 'eager'],
         ],
     ],

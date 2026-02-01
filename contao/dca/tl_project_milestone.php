@@ -64,18 +64,18 @@ $GLOBALS['TL_DCA']['tl_project_milestone'] = [
     ],
     'fields' => [
         'id' => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment",
+            'sql' => "int unsigned NOT NULL auto_increment",
         ],
         'pid' => [
             'foreignKey' => 'tl_project.title',
             'relation'   => ['type' => 'belongsTo', 'load' => 'lazy'],
-            'sql'        => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
         'tstamp' => [
-            'sql' => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
         'sorting' => [
-            'sql' => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
         ],
         'title' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project_milestone']['title'],
@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_project_milestone'] = [
             'inputType'     => 'text',
             'eval'          => ['rgxp' => 'alias', 'doNotCopy' => true, 'unique' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
             'save_callback' => [['tl_project_milestone', 'generateAlias']],
-            'sql'           => "varchar(255) BINARY NOT NULL default ''"
+            'sql' => "varchar(255) NOT NULL default ''"
         ],
         'milestoneDate' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_project_milestone']['milestoneDate'],
@@ -131,7 +131,7 @@ $GLOBALS['TL_DCA']['tl_project_milestone'] = [
             'sorting'           => true,
             'foreignKey'        => 'tl_member.CONCAT(firstname, " ", lastname)',
             'eval'              => ['submitOnChange' => true, 'includeBlankOption' => true, 'tl_class' => 'w25 clr'],
-            'sql'               => "int(10) unsigned NOT NULL default 0",
+            'sql' => "int unsigned NOT NULL default 0",
             'relation'          => ['type' => 'hasOne', 'load' => 'lazy']
         ],
         'tasks' => [
