@@ -22,7 +22,7 @@ use Contao\Date;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
-use Contao\CoreBundle\Twig\FragmentTemplate;
+use Contao\Template;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,7 +70,7 @@ class ProjectListingController extends AbstractFrontendModuleController
         return $services;
     }
 
-    protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
+    protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
         $userFirstname = 'DUDE';
 
