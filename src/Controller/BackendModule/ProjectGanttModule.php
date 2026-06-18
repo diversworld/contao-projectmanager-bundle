@@ -22,8 +22,8 @@ class ProjectGanttModule extends AbstractBackendController
         /** @var Environment $twig */
         $twig = System::getContainer()->get('twig');
 
-        return $twig->render('@DiversworldContaoProjectmanager/be_project_gantt.html.twig', $data);
-        //return $twig->render('be_project_gantt.html.twig.old', $data);
+        return $twig->render('@DiversworldContaoProjectmanager/be_project_gantt.html.Twig', $data);
+        //return $Twig->render('be_project_gantt.html.Twig.old', $data);
     }
 
     private function buildTemplateData(): array

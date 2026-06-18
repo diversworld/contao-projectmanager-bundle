@@ -48,7 +48,7 @@ class MyCustomController extends AbstractController
         ];
 
         return new Response($this->twig->render(
-            '@DiversworldContaoProjectmanager/MyCustom/my_custom.html.twig',
+            '@DiversworldContaoProjectmanager/MyCustom/my_custom.html.Twig',
             [
                 'animals' => $animals,
             ]
