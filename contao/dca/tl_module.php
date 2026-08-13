@@ -14,7 +14,13 @@ declare(strict_types=1);
 
 use Diversworld\ContaoProjectmanagerBundle\Controller\FrontendModule\ProjectListingController;
 
+if (!isset($GLOBALS['TL_DCA']['tl_module']['palettes']) || !is_array($GLOBALS['TL_DCA']['tl_module']['palettes'])) {
+    $GLOBALS['TL_DCA']['tl_module']['palettes'] = [];
+}
+
 /**
  * Frontend modules
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes'][ProjectListingController::TYPE] = '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+if (isset($GLOBALS['TL_DCA']['tl_module']['palettes']) && is_array($GLOBALS['TL_DCA']['tl_module']['palettes'])) {
+    $GLOBALS['TL_DCA']['tl_module']['palettes'][ProjectListingController::TYPE] = '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+}
